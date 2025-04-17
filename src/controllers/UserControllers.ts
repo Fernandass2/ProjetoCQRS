@@ -1,56 +1,46 @@
 import { Request, Response } from "express";
-import { 
-    getAllMedicos, 
-    createMedico, 
-     updateMedico, 
-     deleteMedico, 
-    Med 
-} from "../models/UserModel";
 
-export async function getMedicos(req: Request, res: Response): Promise<void> {
+
+import { getAllUsersmedic, createUsermedic, updateUsermedic, deleteUsermedic, Usermedic } from "../models/userModels";
+
+export async function getUsersmedic(req: Request, res: Response): Promise<void> {
     try {
-        const medicos = await getAllMedicos();
-        res.status(200).json(medicos);
-    } catch (error) {
-        res.status(500).json(`Erro ao tentar buscar os médicos -> ${error}`);
+        const users = await getAllUsersmedic();
+        res.status(200).json(users);
+    }
+    catch (error) {
+        res.status(500).json({ er: `Erro ao tentar buscar os usuários -> ${error}` })
     }
 }
 
-export async function createMedicoHandler(req: Request, res: Response): Promise<void> {
+export async function create(req: Request, res: Response): Promise<void> {
     try {
-        const medico: Omit<Med, "id"> = req.body;
-        const resultado = await createMedico(medico);
-        res.status(201).json(`Médico cadastrado com sucesso -> ${resultado}`);
-    } catch (err) {
-        res.status(500).json(`Erro ao tentar cadastrar médico -> ${err}`);
+        const user: Omit<Usermedic, "id"> = req.body
+        const rs = await createUsermedic(user);
+        res.status(201).json(`Cadastro realizado -> ${rs}`);
+    }
+    catch (err) {
+        res.status(500).json(`Erro ao tentar cadastrar ${err}`);
     }
 }
 
-export async function updateMedicoHandler(req: Request, res: Response): Promise<void> {
+export async function update(req: Request, res: Response): Promise<void> {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).json("ID inválido");
-            return;
-        }
-        const medico: Omit<Med, "id"> = req.body;
-        const resultado = await updateMedico(id, medico);
-        res.status(200).json(`Médico atualizado com sucesso -> ${resultado}`);
-    } catch (err) {
-        res.status(500).json(`Erro ao tentar atualizar médico -> ${err}`);
+        const user: Omit<Usermedic, "id"> = req.body
+        const rs = await updateUsermedic(parseInt(req.params.id), user)
+        res.status(201).json(`Atualizado -> ${rs}`);
+    }
+    catch (err) {
+        res.status(500).json(`Erro ao tentar cadastrar ${err}`);
     }
 }
 
-export async function deleteMedicoHandler(req: Request, res: Response): Promise<void> {
+export async function deleta(req: Request, res: Response): Promise<void> {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).json("ID inválido");
-            return;
-        }
-        const resultado = await deleteMedico(id);
-        res.status(200).json(`Médico removido com sucesso -> ${resultado}`);
-    } catch (err) {
-        res.status(500).json(`Erro ao tentar remover médico -> ${err}`);
+        const rs = await deleteUsermedic(parseInt(req.params.id))
+        res.status(201).json(`Apagado -> ${rs}`);
+    }
+    catch (err) {
+        res.status(500).json(`Erro ao tentar cadastrar ${err}`);
     }
 }
